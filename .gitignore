@@ -1,0 +1,22 @@
+# Maven
+target/
+*.class
+*.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.suo
+*.user
+
+# Logs
+logs/
+*.log
+
+# Credenciales - NO subir al repo
+application-prod.properties
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ejercicios | PurpleForce Gym</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"/>
+</head>
+<body>
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/admin/dashboard}"><i class="bi bi-lightning-fill"></i> Purple<span>Force</span> Gym</a>
+    <ul class="navbar-nav">
+        <li><a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a></li>
+        <li><a class="nav-link" th:href="@{/admin/clases}">Clases</a></li>
+        <li><a class="nav-link" th:href="@{/admin/tipos-clase}">Tipos</a></li>
+        <li><a class="nav-link active" th:href="@{/admin/ejercicios}">Ejercicios</a></li>
+        <li>
+            <form th:action="@{/auth/logout}" method="post" style="display:inline">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn btn-outline" style="font-size:0.82rem;"><i class="bi bi-box-arrow-right"></i> Salir</button>
+            </form>
+        </li>
+    </ul>
+</nav>
+<div class="container page-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title"><i class="bi bi-activity"></i> Ejercicios</div>
+            <div class="page-subtitle">Catálogo de ejercicios disponibles en el gimnasio</div>
+        </div>
+        <a th:href="@{/admin/ejercicios/nuevo}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Nuevo ejercicio</a>
+    </div>
+
+    <div th:if="${exito}" class="alert alert-success"><i class="bi bi-check-circle-fill"></i> <span th:text="${exito}"></span></div>
+
+    <!-- Filtros -->
+    <form th:action="@{/admin/ejercicios}" method="get" class="filters-bar">
+        <div class="form-group">
+            <label>Grupo muscular</label>
+            <select name="grupo" class="form-control" th:value="${grupoFiltro}">
+                <option value="">Todos</option>
+                <option value="PIERNAS"        th:selected="${grupoFiltro == 'PIERNAS'}">Piernas</option>
+                <option value="PECHO"          th:selected="${grupoFiltro == 'PECHO'}">Pecho</option>
+                <option value="ESPALDA"        th:selected="${grupoFiltro == 'ESPALDA'}">Espalda</option>
+                <option value="BRAZOS"         th:selected="${grupoFiltro == 'BRAZOS'}">Brazos</option>
+                <option value="CORE"           th:selected="${grupoFiltro == 'CORE'}">Core</option>
+                <option value="CUERPO_COMPLETO" th:selected="${grupoFiltro == 'CUERPO_COMPLETO'}">Cuerpo completo</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Dificultad</label>
+            <select name="dificultad" class="form-control" th:value="${dificultadFiltro}">
+                <option value="">Todas</option>
+                <option value="BASICO"    th:selected="${dificultadFiltro == 'BASICO'}">Básico</option>
+                <option value="INTERMEDIO" th:selected="${dificultadFiltro == 'INTERMEDIO'}">Intermedio</option>
+                <option value="AVANZADO"  th:selected="${dificultadFiltro == 'AVANZADO'}">Avanzado</option>
+            </select>
+        </div>
+        <div style="padding-bottom:0.1rem;">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-funnel"></i> Filtrar</button>
+            <a th:href="@{/admin/ejercicios}" class="btn btn-outline" style="margin-left:0.5rem;">Limpiar</a>
+        </div>
+    </form>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr><th>Nombre</th><th>Grupo muscular</th><th>Dificultad</th><th>Material</th><th>Descripción</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(ejercicios)}">
+                    <td colspan="6" style="text-align:center; padding:2rem; color:#888;">No hay ejercicios con esos filtros</td>
+                </tr>
+                <tr th:each="e : ${ejercicios}">
+                    <td><strong th:text="${e.nombre}"></strong></td>
+                    <td><span class="badge badge-purple" th:text="${e.grupoMuscular}"></span></td>
+                    <td>
+                        <span th:if="${e.dificultad == 'BASICO'}"    class="badge badge-success">Básico</span>
+                        <span th:if="${e.dificultad == 'INTERMEDIO'}" class="badge badge-warning">Intermedio</span>
+                        <span th:if="${e.dificultad == 'AVANZADO'}"  class="badge badge-danger">Avanzado</span>
+                    </td>
+                    <td th:text="${e.materialNecesario != null ? e.materialNecesario : 'Ninguno'}"></td>
+                    <td style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"
+                        th:text="${e.descripcion != null ? e.descripcion : '-'}"></td>
+                    <td>
+                        <div style="display:flex; gap:0.4rem;">
+                            <a th:href="@{/admin/ejercicios/{id}/editar(id=${e.id})}" class="btn btn-outline btn-sm">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form th:action="@{/admin/ejercicios/{id}/eliminar(id=${e.id})}" method="post"
+                                  onsubmit="return confirm('¿Eliminar este ejercicio?')">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

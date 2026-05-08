@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tipo de Clase | PurpleForce Gym</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"/>
+</head>
+<body>
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/admin/dashboard}"><i class="bi bi-lightning-fill"></i> Purple<span>Force</span> Gym</a>
+    <ul class="navbar-nav">
+        <li><a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a></li>
+        <li><a class="nav-link active" th:href="@{/admin/tipos-clase}">Tipos de Clase</a></li>
+    </ul>
+</nav>
+<div class="container page-content">
+    <div class="page-header">
+        <div><div class="page-title" th:text="${tipo.id == null ? 'Nuevo Tipo de Clase' : 'Editar Tipo de Clase'}"></div></div>
+        <a th:href="@{/admin/tipos-clase}" class="btn btn-outline"><i class="bi bi-arrow-left"></i> Volver</a>
+    </div>
+    <div class="card" style="max-width:600px;">
+        <div class="card-body">
+            <form th:action="@{/admin/tipos-clase/guardar}" th:object="${tipo}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" th:field="*{id}"/>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre *</label>
+                        <input type="text" th:field="*{nombre}" class="form-control"
+                               th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid'" placeholder="Ej: Yoga"/>
+                        <div class="error-msg" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nivel *</label>
+                        <select th:field="*{nivel}" class="form-control">
+                            <option value="PRINCIPIANTE">Principiante</option>
+                            <option value="INTERMEDIO">Intermedio</option>
+                            <option value="AVANZADO">Avanzado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Duración (minutos) *</label>
+                        <input type="number" th:field="*{duracionMinutos}" class="form-control" min="15" max="180"
+                               th:classappend="${#fields.hasErrors('duracionMinutos')} ? 'is-invalid'"/>
+                        <div class="error-msg" th:if="${#fields.hasErrors('duracionMinutos')}" th:errors="*{duracionMinutos}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio (€) *</label>
+                        <input type="number" th:field="*{precio}" class="form-control" step="0.50" min="0"
+                               th:classappend="${#fields.hasErrors('precio')} ? 'is-invalid'"/>
+                        <div class="error-msg" th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Color de identificación</label>
+                    <input type="color" th:field="*{color}" class="form-control" style="height:42px; padding:4px;"/>
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea th:field="*{descripcion}" class="form-control" rows="3"
+                              placeholder="Describe brevemente este tipo de clase..."></textarea>
+                </div>
+                <div style="display:flex; gap:1rem; margin-top:0.5rem;">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Guardar</button>
+                    <a th:href="@{/admin/tipos-clase}" class="btn btn-outline">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

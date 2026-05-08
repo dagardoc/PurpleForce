@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Clase | PurpleForce Gym</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"/>
+</head>
+<body>
+<nav class="navbar">
+    <a class="navbar-brand" th:href="@{/admin/dashboard}"><i class="bi bi-lightning-fill"></i> Purple<span>Force</span> Gym</a>
+    <ul class="navbar-nav">
+        <li><a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a></li>
+        <li><a class="nav-link active" th:href="@{/admin/clases}">Clases</a></li>
+    </ul>
+</nav>
+<div class="container page-content">
+    <div class="page-header">
+        <div>
+            <div class="page-title" th:text="${clase.id == null ? 'Nueva Clase' : 'Editar Clase'}">Clase</div>
+        </div>
+        <a th:href="@{/admin/clases}" class="btn btn-outline"><i class="bi bi-arrow-left"></i> Volver</a>
+    </div>
+
+    <div class="card" style="max-width:700px;">
+        <div class="card-body">
+            <form th:action="@{/admin/clases/guardar}" th:object="${clase}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" th:field="*{id}"/>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tipo de Clase *</label>
+                        <select th:field="*{tipoClase}" class="form-control"
+                                th:classappend="${#fields.hasErrors('tipoClase')} ? 'is-invalid'">
+                            <option value="">-- Selecciona --</option>
+                            <option th:each="t : ${tipos}" th:value="${t.id}" th:text="${t.nombre}"
+                                    th:selected="${clase.tipoClase != null and clase.tipoClase.id == t.id}"></option>
+                        </select>
+                        <div class="error-msg" th:if="${#fields.hasErrors('tipoClase')}" th:errors="*{tipoClase}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Entrenador *</label>
+                        <select th:field="*{entrenador}" class="form-control"
+                                th:classappend="${#fields.hasErrors('entrenador')} ? 'is-invalid'">
+                            <option value="">-- Selecciona --</option>
+                            <option th:each="e : ${entrenadores}" th:value="${e.id}" th:text="${e.nombreCompleto}"
+                                    th:selected="${clase.entrenador != null and clase.entrenador.id == e.id}"></option>
+                        </select>
+                        <div class="error-msg" th:if="${#fields.hasErrors('entrenador')}" th:errors="*{entrenador}"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Fecha *</label>
+                        <input type="date" th:field="*{fecha}" class="form-control"
+                               th:classappend="${#fields.hasErrors('fecha')} ? 'is-invalid'"/>
+                        <div class="error-msg" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Sala</label>
+                        <input type="text" th:field="*{sala}" class="form-control" placeholder="Sala A, Sala Spinning..."/>
+                    </div>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label>Hora inicio *</label>
+                        <input type="time" th:field="*{horaInicio}" class="form-control"
+                               th:classappend="${#fields.hasErrors('horaInicio')} ? 'is-invalid'"/>
+                        <div class="error-msg" th:if="${#fields.hasErrors('horaInicio')}" th:errors="*{horaInicio}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Hora fin *</label>
+                        <input type="time" th:field="*{horaFin}" class="form-control"
+                               th:classappend="${#fields.hasErrors('horaFin')} ? 'is-invalid'"/>
+                        <div class="error-msg" th:if="${#fields.hasErrors('horaFin')}" th:errors="*{horaFin}"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Aforo máximo *</label>
+                        <input type="number" th:field="*{aforoMaximo}" class="form-control" min="1" max="100"
+                               th:classappend="${#fields.hasErrors('aforoMaximo')} ? 'is-invalid'"/>
+                        <div class="error-msg" th:if="${#fields.hasErrors('aforoMaximo')}" th:errors="*{aforoMaximo}"></div>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:1rem; margin-top:0.5rem;">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle"></i> Guardar clase</button>
+                    <a th:href="@{/admin/clases}" class="btn btn-outline">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
