@@ -1,20 +1,22 @@
-# 💪 PurpleForce Gym
+# PurpleForce Gym
 
 > Aplicación web de gestión de gimnasio — Proyecto Intermodular 2º DAM  
 > **Autor:** Daniel García Docío · **Curso:** 2025/26 · **Centro:** Nortempo Formación
 
 ---
 
-## 📋 Descripción
+## Descripción
 
 **PurpleForce Gym** es una aplicación web completa para gestionar un gimnasio.  
 Permite a administradores, instructores y socios interactuar con el sistema según su rol:
 
-- **Administrador** → gestión total (clases, entrenadores, socios, ejercicios, informes)
-- **Instructor** → ver sus clases asignadas y los alumnos inscritos
-- **Socio** → explorar clases, hacer reservas, ver historial y descargar PDF
+- **Administrador** — gestión total (clases, entrenadores, socios, ejercicios, informes)
+- **Instructor** — ver sus clases asignadas y los alumnos inscritos
+- **Socio** — explorar clases, hacer reservas, ver historial y descargar PDF
 
-## 🛠️ Tecnologías
+---
+
+## Tecnologías
 
 | Capa | Tecnología |
 |------|-----------|
@@ -28,130 +30,61 @@ Permite a administradores, instructores y socios interactuar con el sistema seg�
 
 ---
 
-## ⚙️ Requisitos previos
+## Requisitos previos
 
-- **Java 17+** (JDK)  
-- **Maven 3.8+**  
-- **MySQL 8+** en ejecución  
-- **IntelliJ IDEA** u otro IDE (recomendado)
+- Java 17 o superior (JDK, no solo JRE)
+- Maven 3.8 o superior
+- MySQL 8.0 en ejecución
+- Visual Studio Code con Extension Pack for Java y Spring Boot Extension Pack
 
 ---
 
-## 🚀 Instalación y arranque
+## Instalación y arranque
 
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/TU_USUARIO/purpleforce-gym.git
-cd purpleforce-gym
+git clone https://github.com/dagardoc/PurpleForce.git
+cd PurpleForce
 ```
 
 ### 2. Crear la base de datos en MySQL
 
 ```sql
-CREATE DATABASE purpleforce_gym CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE gimnasio_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 ### 3. Configurar credenciales de base de datos
 
-Edita `src/main/resources/application.properties` o usa variables de entorno:
+Edita `src/main/resources/application.properties`:
 
 ```properties
-# Opción A: editar directamente
+spring.datasource.url=jdbc:mysql://localhost:3306/gimnasio_db?useSSL=false&serverTimezone=Europe/Madrid&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
 spring.datasource.username=root
-spring.datasource.password=tu_contraseña
-
-# Opción B: variables de entorno (recomendado)
-# DB_USER=root
-# DB_PASS=tu_contraseña
+spring.datasource.password=TU_CONTRASEÑA
 ```
 
-### 4. Compilar y arrancar
+### 4. Arrancar la aplicación
 
-```bash
-mvn spring-boot:run
-```
+Abre `src/main/java/com/purpleforce/gym/GymApplication.java` en VS Code y pulsa el botón **Run** que aparece encima del método `main`.
 
 La aplicación arranca en **http://localhost:8080**
 
 ---
 
-## 📦 Datos de ejemplo
+## Datos de ejemplo
 
-Los datos de prueba se cargan **automáticamente** al arrancar por primera vez mediante el fichero `src/main/resources/data.sql`.
+Los datos de prueba se cargan **automáticamente** al arrancar mediante el fichero `src/main/resources/data.sql`.
 
-### Usuarios disponibles (contraseña de todos: `1234`)
+### Usuarios disponibles (contraseña: `1234`)
 
 | Rol | Email |
 |-----|-------|
 | Admin | `admin@purpleforce.com` |
 | Instructor | `carlos@purpleforce.com` |
-| Instructor | `laura@purpleforce.com` |
 | Socio | `alex@gmail.com` |
 | Socio | `maria@gmail.com` |
 
 ---
 
-## 📁 Estructura del proyecto
-
-```
-src/
-├── main/
-│   ├── java/com/purpleforce/gym/
-│   │   ├── GymApplication.java          ← Clase principal
-│   │   ├── config/
-│   │   │   └── SecurityConfig.java      ← Spring Security
-│   │   ├── controller/
-│   │   │   ├── AdminController.java     ← Panel administrador
-│   │   │   ├── SocioController.java     ← Panel socio
-│   │   │   ├── InstructorController.java← Panel instructor
-│   │   │   └── AuthController.java      ← Login/Registro
-│   │   ├── model/
-│   │   │   ├── Usuario.java
-│   │   │   ├── Entrenador.java
-│   │   │   ├── TipoClase.java
-│   │   │   ├── Clase.java
-│   │   │   ├── Ejercicio.java
-│   │   │   ├── Reserva.java
-│   │   │   └── Rol.java
-│   │   ├── repository/                  ← Interfaces JPA
-│   │   └── service/                     ← Lógica de negocio
-│   └── resources/
-│       ├── templates/                   ← Vistas Thymeleaf
-│       ├── static/css/style.css         ← Estilos morado/blanco/negro
-│       ├── application.properties
-│       └── data.sql                     ← Datos de ejemplo
-└── test/
-    └── GymApplicationTests.java         ← 10 pruebas funcionales
-```
-
----
-
-## 🧪 Ejecutar los tests
-
-```bash
-mvn test
-```
-
-Los tests usan H2 en memoria, no necesitan MySQL activo.
-
----
-
-## 📊 Funcionalidades principales
-
-- ✅ Login/registro con roles (ADMIN, INSTRUCTOR, SOCIO)
-- ✅ CRUD completo de clases, entrenadores, tipos de clase y ejercicios
-- ✅ Reserva y cancelación de clases con control de aforo en tiempo real
-- ✅ Control de concurrencia mediante `@Transactional`
-- ✅ Ranking de clases más populares (consulta no trivial 1)
-- ✅ Historial de reservas por usuario (consulta no trivial 2)
-- ✅ Exportar historial en **PDF** (OpenPDF)
-- ✅ Exportar ranking en **CSV** (Apache Commons CSV)
-- ✅ Filtros combinados (nivel + fecha)
-- ✅ Datos de ejemplo cargados automáticamente
-
----
-
-## 📝 Memoria del proyecto
-
-La memoria final en PDF está en: `/docs/Memoria_GarciaDaniel.pdf`
+## Estructura del proyecto
