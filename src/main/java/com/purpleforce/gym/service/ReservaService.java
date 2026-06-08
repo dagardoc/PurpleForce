@@ -39,7 +39,7 @@ public class ReservaService {
             throw new IllegalStateException("Ya tienes una reserva confirmada en esta clase");
         }
 
-        // Re-cargar la clase con bloqueo para evitar condición de carrera
+        // Recargar la clase con bloqueo para evitar condición de carrera
         Clase claseActual = claseRepository.findById(clase.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Clase no encontrada"));
 
